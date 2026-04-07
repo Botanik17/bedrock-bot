@@ -5,7 +5,7 @@ function startBot(){
 const client = bedrock.createClient({
   host: "pflaume.dat.gg",
   port: 17444,
-  username:"Botaniker@gmx.ch",
+  username:"botanak.boteka@gmx.ch",
   offline: false
 })
 
