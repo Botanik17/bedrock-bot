@@ -1,8 +1,7 @@
-
 const bedrock = require('bedrock-protocol');
 const express = require('express');
-const cron = require('node-
-  
+const cron = require('node-cron');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,11 +16,11 @@ app.listen(PORT, '0.0.0.0', () => {
 let client = null;
 
 const SERVER_CONFIG = {
-  host: 'pflaume.dat.gg',        // Deine Server-IP
-  port: 17444,                   // Dein Server-Port
-  username: 'Botanak',           // Anzeigename im Spiel
-  offline: false,                // false = Microsoft/Xbox Login
-  profilesFolder: './profiles'   // Speichert Login-Daten
+  host: 'pflaume.dat.gg',
+  port: 17444,
+  username: 'Botanak',
+  offline: false,
+  profilesFolder: './profiles'
 };
 
 function startBot() {
@@ -36,11 +35,7 @@ function startBot() {
     client = bedrock.createClient(SERVER_CONFIG);
 
     client.on('connect', () => {
-      console.log('✅ Bot hat sich mit dem Minecraft-Server verbunden!');
-    });
-
-    client.on('join', () => {
-      console.log('🎮 Bot ist dem Spiel beigetreten!');
+      console.log('✅ Verbunden!');
     });
 
     client.on('spawn', () => {
@@ -48,8 +43,11 @@ function startBot() {
     });
 
     client.on('disconnect', (reason) => {
-      console.log('❌ Bot wurde getrennt:', reason);
+      console.log('❌ Getrennt:', reason);
       client = null;
+
+      // 🔁 Auto-Restart nach 10 Sekunden
+      setTimeout(startBot, 10000);
     });
 
     client.on('error', (err) => {
@@ -58,41 +56,40 @@ function startBot() {
     });
 
   } catch (error) {
-    console.error('Fehler beim Starten des Bots:', error);
+    console.error('Start-Fehler:', error);
     client = null;
   }
 }
 
-// Bot stoppen
 function stopBot() {
   if (client) {
-    console.log('Stoppe den Minecraft Bot...');
+    console.log('Stoppe Bot...');
     try {
       client.disconnect();
     } catch (err) {
-      console.error('Fehler beim Stoppen:', err);
+      console.error('Stop-Fehler:', err);
     }
     client = null;
-  } else {
-    console.log('Bot ist bereits gestoppt.');
   }
 }
 
-cron.schedule('0 13 * * *', () => {
-  console.log('⏰ 13:00 - Bot wird gestartet');
+// ✅ Start um 14:00
+cron.schedule('0 14 * * *', () => {
+  console.log('⏰ 14:00 - Bot startet');
   startBot();
 }, {
   timezone: 'Europe/Zurich'
 });
 
-cron.schedule('0 24 * * *', () => {
-  console.log('⏰ 24:00 - Bot wird gestoppt');
+// ✅ Stop um 22:00
+cron.schedule('0 22 * * *', () => {
+  console.log('⏰ 22:00 - Bot stoppt');
   stopBot();
 }, {
   timezone: 'Europe/Zurich'
 });
 
-// Prüfen, ob der Bot beim Start laufen soll
+// Zeitcheck beim Start
 function isWithinActiveHours() {
   const now = new Date();
   const zurichTime = new Date(
@@ -104,8 +101,8 @@ function isWithinActiveHours() {
 
 // Beim Start entscheiden
 if (isWithinActiveHours()) {
-  console.log('Bot startet sofort, da wir innerhalb der aktiven Zeit sind.');
+  console.log('Bot startet sofort.');
   startBot();
 } else {
-  console.log('Bot wartet auf die nächste Startzeit um 14:00 Uhr.');
+  console.log('Bot wartet auf 14:00.');
 }
