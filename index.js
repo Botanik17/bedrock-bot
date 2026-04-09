@@ -101,8 +101,8 @@ cron.schedule('0 14 * * *', () => {
 });
 
 // Stop um 22:00 Uhr
-cron.schedule('0 22 * * *', () => {
-  console.log('⏰ 22:00 - Bot wird gestoppt');
+cron.schedule('0 23 * * *', () => {
+  console.log('⏰ 23:00 - Bot wird gestoppt');
   stopBot();
 }, {
   timezone: 'Europe/Zurich'
