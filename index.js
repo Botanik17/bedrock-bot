@@ -1,13 +1,8 @@
-// ==============================
-// Module laden
-// ==============================
+
 const bedrock = require('bedrock-protocol');
 const express = require('express');
-const cron = require('node-cron');
-
-// ==============================
-// Webserver für Render
-// ==============================
+const cron = require('node-
+  
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -19,12 +14,8 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Webserver läuft auf Port ${PORT}`);
 });
 
-// ==============================
-// Minecraft Bedrock Bot
-// ==============================
 let client = null;
 
-// 🔧 Server-Konfiguration
 const SERVER_CONFIG = {
   host: 'pflaume.dat.gg',        // Deine Server-IP
   port: 17444,                   // Dein Server-Port
@@ -33,7 +24,6 @@ const SERVER_CONFIG = {
   profilesFolder: './profiles'   // Speichert Login-Daten
 };
 
-// Bot starten
 function startBot() {
   if (client) {
     console.log('Bot läuft bereits.');
@@ -88,21 +78,15 @@ function stopBot() {
   }
 }
 
-// ==============================
-// Zeitsteuerung (Schweizer Zeit)
-// ==============================
-
-// Start um 14:00 Uhr
-cron.schedule('0 14 * * *', () => {
-  console.log('⏰ 14:00 - Bot wird gestartet');
+cron.schedule('0 13 * * *', () => {
+  console.log('⏰ 13:00 - Bot wird gestartet');
   startBot();
 }, {
   timezone: 'Europe/Zurich'
 });
 
-// Stop um 22:00 Uhr
-cron.schedule('0 23 * * *', () => {
-  console.log('⏰ 23:00 - Bot wird gestoppt');
+cron.schedule('0 24 * * *', () => {
+  console.log('⏰ 24:00 - Bot wird gestoppt');
   stopBot();
 }, {
   timezone: 'Europe/Zurich'
